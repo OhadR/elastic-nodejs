@@ -20,14 +20,14 @@ export class ElasticsearchDatastore {
 
     }
 
-    public async getLayersByOwner(ownerId: string): Promise<Component[]> {
+    public async getLayersByOwner(ownerId: string): Promise<object[]> {
         if (!ownerId) {
             return Promise.reject();
         }
 
         debug(`UtilitiesElasticsearchDatastore.getLayersByOwner: Retrieving layers for ownerId '${ownerId}'`);
         const aggregationName = 'uniq_components';
-        let buckets: {key: Component; doc_count: number;}[];
+        let hits: object[];
 
         try {
             const response = await this._elasticClient.search({
@@ -38,28 +38,27 @@ export class ElasticsearchDatastore {
                     }
                 }
             });
-            buckets = response?.hits?.hits;
+            hits = response?.hits?.hits;
         } catch (error) {
             return Promise.reject();
         }
 
-        const components = _.map(buckets, bucket => bucket.key);
-        debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(components)} annotation's components for workorder id '${workorderId}'`);
-        return Promise.resolve(buckets);
+        debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(hits)} annotation's components for workorder id '${ownerId}'`);
+        return Promise.resolve(hits);
     }
 
 
-    public async getAnnotationComponents(workorderId: string): Promise<Component[]> {
+    public async getAnnotationComponents(workorderId: string): Promise<object[]> {
         if (!workorderId) {
-            return Promise.reject(new UtilitiesInvalidArgsError({workorderId}));
+            return Promise.reject();
         }
 
         debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Retrieving annotation's components for workorder id '${workorderId}'`);
         const aggregationName = 'uniq_components';
-        let buckets: {key: Component; doc_count: number;}[];
+        let buckets: object[];
         try {
             const response = await this._elasticClient.search({
-                index: ANNOTATIONS_INDEX,
+                index: ASSETS_INDEX,
                 // q:'default_operator=AND&q=accountId:${context.args.accountId}+workorderId:${context.args.workorderId}',
                 q:`workorderId:${workorderId}`,
                 body: {
@@ -80,6 +79,4 @@ export class ElasticsearchDatastore {
         debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(components)} annotation's components for workorder id '${workorderId}'`);
         return Promise.resolve(components);
     }
-
-
 }
