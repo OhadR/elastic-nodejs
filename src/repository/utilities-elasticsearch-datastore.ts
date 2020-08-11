@@ -1,7 +1,7 @@
 import {ElasticConfig} from "../types/config-type";
 import {Client as ElasticClient} from "elasticsearch";
 import * as _ from "lodash";
-var debug = require('debug')('http');
+var debug = require('debug')('elastic');
 
 const ASSETS_INDEX: string = 'assets';
 

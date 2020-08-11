@@ -1,29 +1,24 @@
 import { Config } from "./config/config";
 import { ElasticsearchDatastore } from "./repository/utilities-elasticsearch-datastore";
-var debug = require('debug')('http');
+var debug = require('debug')('runner');
 
 class GetLayersByBoundingBox {
 
-  private searchAssetByField_pageLimit = 50;
-
-  bucketToDomain = {};
-
   async handler()  {
-    const accountId = '';
+    const ownerId = 'ownerId';
     try {
-      debug('got accountId:', accountId);      //----------------------------------------------------------------------------------------------------------------------------------------
+      debug('got accountId:', ownerId);      //----------------------------------------------------------------------------------------------------------------------------------------
 
       const elasticConfig = Config.instance.elasticSearch;
-      if (_.isError(elasticConfig)) {
-        debug(`failed elasticConfig on ${accountId}`);
-
-       // return this.error(500, elasticConfig);
+      if (elasticConfig == null) {
+        debug(`failed getting elasticConfig `);
+        throw new Error(`failed getting elasticConfig `);
       }
 
       const layersEsDatastore = new ElasticsearchDatastore(elasticConfig);
-      debug(`GetLayersByBoundingBoxLambda.handler`);
+      debug(`runner: got elastic' configuration`);
 
-      const hits: object[] = await layersEsDatastore.getLayersByOwner(accountId);
+      const hits: object[] = await layersEsDatastore.getLayersByOwner(ownerId);
       debug(hits);
 
       //return this.response(200, layers);
@@ -36,3 +31,7 @@ class GetLayersByBoundingBox {
 
 
 }
+
+debug('starting runner...');
+const runner = new GetLayersByBoundingBox();
+runner.handler();
