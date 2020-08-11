@@ -26,7 +26,6 @@ export class ElasticsearchDatastore {
         }
 
         debug(`UtilitiesElasticsearchDatastore.getLayersByOwner: Retrieving layers for ownerId '${ownerId}'`);
-        const aggregationName = 'uniq_components';
         let hits: object[];
 
         try {
@@ -40,6 +39,7 @@ export class ElasticsearchDatastore {
             });
             hits = response?.hits?.hits;
         } catch (error) {
+            debug(error);
             return Promise.reject();
         }
 
