@@ -114,9 +114,9 @@ given a polygon, seach for all polygons in the ES that intersents.
     } 
     
 ---
-![with/without geo-mapping](/images/Image5.jpg)
+![geo-mapping](/images/Image_5.jpg)
 
-![photo explaining dynamic mapping and geo-mapping](/images/Image 6.jpg)
+![photo explaining dynamic mapping and geo-mapping](/images/Image_6.jpg)
 
 explanation about HOW elastic indexes locations (quad-trees).
 
