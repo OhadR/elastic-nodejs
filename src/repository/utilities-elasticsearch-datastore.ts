@@ -5,6 +5,39 @@ var debug = require('debug')('elastic');
 
 const ASSETS_INDEX: string = 'assets';
 
+const geo_query = {
+    query: {
+        geo_shape: {
+            "metadata.polygon": {
+                relation: "intersects",
+                shape: {
+                    type:  "polygon",
+                    coordinates: [[[10.526270711323841,10.444489244321758],
+                        [11.925063668547947,10.371171909552444],
+                        [11.070002142972083,9.364612094349482],
+                        [10.526270711323841,10.444489244321758]]]
+                }
+            }
+        }
+    }
+};
+
+const simple_query = {
+    query: {
+        term: { 'metadata.p1': 'ownerId' }
+    }
+};
+
+const boolQuery = {
+    query: {
+        bool: {
+            filter: [
+                {                term: { 'metadata.p1': 'MTohad' }            },
+                {                term: { 'metadata.p2': 'MTredlich' }         }
+            ],
+        }
+    }
+};
 export class ElasticsearchDatastore {
 
     protected _elasticClient: ElasticClient;
@@ -28,14 +61,11 @@ export class ElasticsearchDatastore {
         debug(`UtilitiesElasticsearchDatastore.getLayersByOwner: Retrieving layers for ownerId '${ownerId}'`);
         let hits: object[];
 
+
         try {
             const response = await this._elasticClient.search({
                 index: ASSETS_INDEX,
-                body: {
-                    query: {
-                        term: { ownerId: ownerId }
-                    }
-                }
+                body: boolQuery
             });
             hits = response?.hits?.hits;
         } catch (error) {
@@ -43,7 +73,7 @@ export class ElasticsearchDatastore {
             return Promise.reject();
         }
 
-        debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(hits)} annotation's components for workorder id '${ownerId}'`);
+        debug(`Successfully retrieved ${_.size(hits)} hits for workorder id '${ownerId}'`);
         return Promise.resolve(hits);
     }
 

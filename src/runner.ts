@@ -5,7 +5,7 @@ var debug = require('debug')('runner');
 class GetLayersByBoundingBox {
 
   async handler()  {
-    const ownerId = 'ownerId';
+    const ownerId = 'MTohad';
     try {
       debug('got accountId:', ownerId);      //----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ class GetLayersByBoundingBox {
       debug(`runner: got elastic' configuration`);
 
       const hits: object[] = await layersEsDatastore.getLayersByOwner(ownerId);
-      debug(hits);
+      //debug(hits);
 
       //return this.response(200, layers);
     }
