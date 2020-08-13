@@ -38,6 +38,31 @@ const boolQuery = {
         }
     }
 };
+
+const boolGeoQuery = {
+    query: {
+        bool: {
+            filter: [
+                {    term: { 'p2': 'redlich' }     },
+                {    geo_shape: {
+                        "metadata.polygon": {
+                            relation: "intersects",
+                            shape: {
+                                type:  "polygon",
+                                coordinates: [[[10.526270711323841,10.444489244321758],
+                                    [11.925063668547947,10.371171909552444],
+                                    [11.070002142972083,9.364612094349482],
+                                    [10.526270711323841,10.444489244321758]]]
+                            }
+                        }
+                    }
+                }
+            ],
+        }
+    }
+};
+
+
 export class ElasticsearchDatastore {
 
     protected _elasticClient: ElasticClient;
@@ -65,7 +90,7 @@ export class ElasticsearchDatastore {
         try {
             const response = await this._elasticClient.search({
                 index: ASSETS_INDEX,
-                body: boolQuery
+                body: boolGeoQuery
             });
             hits = response?.hits?.hits;
         } catch (error) {
