@@ -1,3 +1,16 @@
+https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html#:~:text=Obtaining%20Elasticsearch%20for%20Docker%20is,against%20the%20Elastic%20Docker%20registry.&text=Alternatively%2C%20you%20can%20download%20other,.docker.elastic.co.
+
+    docker pull docker.elastic.co/elasticsearch/elasticsearch:7.9.0
+
+run elastic docker (version 7.1.0):
+
+    docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.1.0
+
+to list images - including the elastic image:
+
+    docker images 
+
+
 setting env-variables:
 
 ELASTIC_SEARCH_URL=http://localhost:9200/
