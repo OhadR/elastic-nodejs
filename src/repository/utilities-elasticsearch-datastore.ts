@@ -5,6 +5,12 @@ var debug = require('debug')('elastic');
 
 const ASSETS_INDEX: string = 'assets';
 
+const matchAllQuery = {
+    query: {
+        match_all: {}
+    }
+};
+
 const geo_query = {
     query: {
         geo_shape: {
@@ -90,7 +96,9 @@ export class ElasticsearchDatastore {
         try {
             const response = await this._elasticClient.search({
                 index: ASSETS_INDEX,
-                body: boolGeoQuery
+                size: 5000,
+//                body: boolGeoQuery
+                body: matchAllQuery
             });
             hits = response?.hits?.hits;
         } catch (error) {
@@ -134,4 +142,56 @@ export class ElasticsearchDatastore {
         debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(components)} annotation's components for workorder id '${workorderId}'`);
         return Promise.resolve(components);
     }
+
+    public async getScroll(): Promise<object[]> {
+        const allQuotes = [];
+        const responseQueue = [];
+
+        // start things off by searching, setting a scroll timeout, and pushing
+        // our first response into the queue to be processed
+        const response = await this._elasticClient.search({
+            index: 'assets',
+            // keep the search results "scrollable" for 30 seconds
+            scroll: '30s',
+            // for the sake of this example, we will get only one result per search
+            size: 50,
+            // filter the source to only include the quote field
+//            _source: ['quote'],
+            body: {
+                query: {
+                    match_all: {}
+                }
+            }
+        });
+
+        responseQueue.push(response);
+
+        while (responseQueue.length) {
+            const body = responseQueue.shift();
+
+            // collect the titles from this response
+            body.hits.hits.forEach(function (hit) {
+                debug(hit._id);
+                allQuotes.push(hit._source)
+            });
+
+            // check to see if we have collected all of the quotes
+            // if (body.hits.total.value === allQuotes.length) {
+            //     console.log('Every quote', allQuotes);
+            //     break
+            // }
+
+            // get the next response if there are more quotes to fetch
+            const moreResults = await this._elasticClient.scroll({
+                scrollId: body._scroll_id,
+                scroll: '30s'
+            });
+            debug('$$$$$$$$$$$$$$ ' + moreResults.hits.hits.length);
+            if(moreResults.hits.hits.length != 0) {
+                responseQueue.push(moreResults);
+            }
+        }
+        return Promise.resolve(allQuotes);
+    }
+
 }

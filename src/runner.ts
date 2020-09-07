@@ -20,6 +20,11 @@ class GetLayersByBoundingBox {
 
       const hits: object[] = await layersEsDatastore.getLayersByOwner(ownerId);
       //debug(hits);
+      debug('hits.length: ' + hits.length);
+
+      const hitsScrolled: object[] = await layersEsDatastore.getScroll();
+      debug('hitsScrolled.length: ' + hitsScrolled.length);
+
 
       //return this.response(200, layers);
     }

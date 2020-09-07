@@ -6,6 +6,13 @@ run elastic docker (version 7.1.0):
 
     docker run -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:7.1.0
 
+# how to run the app
+
+    set ELASTIC_SEARCH_URL=https://search-test-staging-es-vkhujfib64q3uset4mdxrno264.us-east-1.es.amazonaws.com
+    set DEBUD=runner
+      
+# QUERIES
+
 to list images - including the elastic image:
 
     docker images 
