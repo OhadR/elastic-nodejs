@@ -145,11 +145,10 @@ export class ElasticsearchDatastore {
 
     public async getScroll(): Promise<object[]> {
         const allQuotes = [];
-        const responseQueue = [];
 
         // start things off by searching, setting a scroll timeout, and pushing
         // our first response into the queue to be processed
-        const response = await this._elasticClient.search({
+        let response = await this._elasticClient.search({
             index: 'assets',
             // keep the search results "scrollable" for 30 seconds
             scroll: '30s',
@@ -164,13 +163,16 @@ export class ElasticsearchDatastore {
             }
         });
 
-        responseQueue.push(response);
 
-        while (responseQueue.length) {
-            const body = responseQueue.shift();
+        while (true) {
+
+            debug('$$$$$$$$$$$$$$ ' + response.hits.hits.length);
+            if(response.hits.hits.length == 0) {
+                break;
+            }
 
             // collect the titles from this response
-            body.hits.hits.forEach(function (hit) {
+            response.hits.hits.forEach(function (hit) {
                 debug(hit._id);
                 allQuotes.push(hit._source)
             });
@@ -182,15 +184,12 @@ export class ElasticsearchDatastore {
             // }
 
             // get the next response if there are more quotes to fetch
-            const moreResults = await this._elasticClient.scroll({
-                scrollId: body._scroll_id,
+            response = await this._elasticClient.scroll({
+                scrollId: response._scroll_id,
                 scroll: '30s'
             });
-            debug('$$$$$$$$$$$$$$ ' + moreResults.hits.hits.length);
-            if(moreResults.hits.hits.length != 0) {
-                responseQueue.push(moreResults);
-            }
         }
+
         return Promise.resolve(allQuotes);
     }
 
