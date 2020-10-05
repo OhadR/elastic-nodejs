@@ -26,6 +26,11 @@ ELASTIC_SEARCH_URL=http://localhost:9200/
 DEBUG=*,-not_this
 
 
+create index:
+
+    PUT
+    /assets
+
 get indices:
 
     GET
@@ -132,6 +137,14 @@ given a polygon, seach for all polygons in the ES that intersents.
        }
      }
     } 
+    
+update a doc:
+
+    POST
+    http://localhost:9200/assets/_doc/<docId>
+    {
+            "p4":  "ohad"
+    }
     
 ---
 ![geo-mapping](/images/Image_5.jpg)
