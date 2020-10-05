@@ -193,4 +193,23 @@ export class ElasticsearchDatastore {
         return Promise.resolve(allQuotes);
     }
 
+    public async updateAsset(id: string, body) {
+        let response;
+        debug(body);
+
+        try {
+            response = await this._elasticClient.update({
+                index: ASSETS_INDEX,
+                id: id,
+                body: { doc: body }
+            });
+        } catch (error) {
+            debug(error);
+            return Promise.reject(error);
+        }
+        debug('response');
+        debug(response);
+        return Promise.resolve(response.result);
+    }
+
 }

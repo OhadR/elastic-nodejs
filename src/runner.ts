@@ -4,7 +4,7 @@ var debug = require('debug')('runner');
 
 class GetLayersByBoundingBox {
 
-  async handler()  {
+  async run()  {
     const ownerId = 'MTohad';
     try {
       debug('got accountId:', ownerId);      //----------------------------------------------------------------------------------------------------------------------------------------
@@ -25,6 +25,11 @@ class GetLayersByBoundingBox {
       const hitsScrolled: object[] = await layersEsDatastore.getScroll();
       debug('hitsScrolled.length: ' + hitsScrolled.length);
 
+      const ret: object[] = await layersEsDatastore.updateAsset('VMHS93QBTx0AMh3JVFjN', {
+        id: 'VMHS93QBTx0AMh3JVFjN',
+        ohad: 'redlich',
+      });
+      debug(ret);
 
       //return this.response(200, layers);
     }
@@ -39,4 +44,4 @@ class GetLayersByBoundingBox {
 
 debug('starting runner...');
 const runner = new GetLayersByBoundingBox();
-runner.handler();
+runner.run();
