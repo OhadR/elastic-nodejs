@@ -193,7 +193,7 @@ export class ElasticsearchDatastore {
         return Promise.resolve(allQuotes);
     }
 
-    public async updateAsset(id: string, body) {
+    public async updateAsset(id: string, body: object): Promise<string> {
         let response;
         debug(body);
 
@@ -209,7 +209,7 @@ export class ElasticsearchDatastore {
         }
         debug('response');
         debug(response);
-        return Promise.resolve(response.result);
+        return Promise.resolve(response.result);    //result should be 'updated'
     }
 
 }

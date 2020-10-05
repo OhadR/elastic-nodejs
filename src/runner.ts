@@ -25,11 +25,11 @@ class GetLayersByBoundingBox {
       const hitsScrolled: object[] = await layersEsDatastore.getScroll();
       debug('hitsScrolled.length: ' + hitsScrolled.length);
 
-      const ret: object[] = await layersEsDatastore.updateAsset('VMHS93QBTx0AMh3JVFjN', {
+      const ret: string = await layersEsDatastore.updateAsset('VMHS93QBTx0AMh3JVFjN', {
         id: 'VMHS93QBTx0AMh3JVFjN',
-        ohad: 'redlich',
+        ohad: 'redlich2',
       });
-      debug(ret);
+      debug(ret); //result should be 'updated'
 
       //return this.response(200, layers);
     }
