@@ -1,5 +1,5 @@
 import { Config } from "./config/config";
-import { ElasticsearchDatastore } from "./repository/utilities-elasticsearch-datastore";
+import { ElasticsearchDatastore } from "./repository/elasticsearch-datastore";
 var debug = require('debug')('runner');
 
 class GetLayersByBoundingBox {
