@@ -138,13 +138,23 @@ given a polygon, seach for all polygons in the ES that intersents.
      }
     } 
     
-update a doc:
+update a doc (NOTE: this is FULL update, setting new doc):
 
     POST
     http://localhost:9200/assets/_doc/<docId>
     {
             "p4":  "ohad"
     }
+
+
+partial update a doc:
+
+    POST
+    http://localhost:9200/assets/_update/<docId>
+    {
+            "p4":  "ohad"
+    }
+
     
 ---
 ![geo-mapping](/images/Image_5.jpg)

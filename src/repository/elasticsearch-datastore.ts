@@ -207,8 +207,7 @@ export class ElasticsearchDatastore {
             debug(error);
             return Promise.reject(error);
         }
-        debug('response');
-        debug(response);
+        debug('response', response);
         return Promise.resolve(response.result);    //result should be 'updated'
     }
 
