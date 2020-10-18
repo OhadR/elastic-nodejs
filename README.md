@@ -146,6 +146,13 @@ update a doc (NOTE: this is FULL update, setting new doc):
             "p4":  "ohad"
     }
 
+equivalent to node's:
+
+	await this._elasticClient.index({
+		index: ASSETS_INDEX,
+		id: assetId,
+		body: body
+	});
 
 partial update a doc:
 
@@ -154,6 +161,14 @@ partial update a doc:
     {
             "p4":  "ohad"
     }
+
+equivalent to node's:
+
+	await this._elasticClient.update({
+		index: ASSETS_INDEX,
+		id: assetId,
+        body: { doc: body }
+	});
 
     
 ---
