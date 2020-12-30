@@ -9,7 +9,7 @@ run elastic docker (version 7.1.0):
 # how to run the app
 
     set ELASTIC_SEARCH_URL=https://search-test-staging-es-vkhujfib64q3uset4mdxrno264.us-east-1.es.amazonaws.com
-    set DEBUD=runner
+    set DEBUG=runner
       
 # QUERIES
 

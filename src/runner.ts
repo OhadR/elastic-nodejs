@@ -40,8 +40,36 @@ class GetLayersByBoundingBox {
   }
 
 
+  async updateMetadata()  {
+    const ownerId = 'MTohad';
+    try {
+      const elasticConfig = Config.instance.elasticSearch;
+      if (elasticConfig == null) {
+        debug(`failed getting elasticConfig `);
+        throw new Error(`failed getting elasticConfig `);
+      }
+
+      const layersEsDatastore = new ElasticsearchDatastore(elasticConfig);
+      debug(`runner: got elastic' configuration`);
+
+      const ret: string = await layersEsDatastore.updateAsset('4bjst5s49e8qc8gfwmem3qvaby.ast', {
+        metadata: {
+          dataTypes: ['ORTHOOHAD 2']
+        }
+      });
+
+      debug(ret); //result should be 'updated'
+    }
+    catch(e) {
+      debug('failed execution:', e.stack)
+      //return this.error(500, {success: false, error: e.stack });
+    }
+  }
+
+
 }
 
 debug('starting runner...');
 const runner = new GetLayersByBoundingBox();
-runner.run();
+//runner.run();
+runner.updateMetadata();
