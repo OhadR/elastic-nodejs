@@ -1,5 +1,7 @@
 import { BunchAsset, ImageLayer, Layer } from 'gvdl-repos-wrapper';
-import normalize from 'turf-normalize';
+//import normalize from 'turf-normalize';
+import * as normalize from 'turf-normalize';
+import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 var debug = require('debug')('elastic');
 
 
@@ -16,7 +18,7 @@ export class LayersCreatorFromAsset {
         return LayersCreatorFromAsset._instance;
     }
 
-    public async processAsset(asset: BunchAsset): Promise<Layer[]> {
+    public async processAsset(asset: BunchAsset, assetsDatastore: ElasticsearchDatastore): Promise<Layer[]> {
         let layersOfAsset: Layer[];
         try {
             //debug only: WARNING that will blast the logger:
@@ -38,17 +40,25 @@ export class LayersCreatorFromAsset {
                 } else if (asset.metadata.dataTypesSources && Object.keys(asset.metadata.dataTypesSources).length > 0 && asset.metadata.sourceFormat == 'rawImages') {
                     layersOfAsset = await this.getLayersOfAsset(asset, asset.metadata.dataTypesSources, asset.rootUri);
                 }
-            }
 
-            //if it is 'rawImages', get the layers for images:
-            if (asset.metadata.sourceFormat == 'rawImages') {
-                const rawImagesLayer = await this.getLayerOfRawImages(asset);
-                if (rawImagesLayer != null) {
-                    layersOfAsset = layersOfAsset.concat(rawImagesLayer);
+                //if it is 'rawImages', get the layers for images:
+                if (asset.metadata.sourceFormat == 'rawImages') {
+                    const rawImagesLayer = await this.getLayerOfRawImages(asset);
+                    if (rawImagesLayer != null) {
+                        layersOfAsset = layersOfAsset.concat(rawImagesLayer);
+                    }
                 }
             }
+
+
         } catch (e) {
             debug(`Failed in assetId: ${asset.assetId} with the following error: `, e.stack);
+        }
+
+        if(!layersOfAsset) {
+            debug('FUCKKKK', asset);
+            await assetsDatastore.deleteAsset(asset.assetId);
+            return;
         }
 
         // Normalize regions

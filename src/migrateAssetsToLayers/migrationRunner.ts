@@ -24,7 +24,7 @@ class MigrationRunner {
       for(const asset of assets) {
         try {
           //break asset into layers and store them:
-          const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
+          const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset, assetsDatastore);
           if(layers) {
             // await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);

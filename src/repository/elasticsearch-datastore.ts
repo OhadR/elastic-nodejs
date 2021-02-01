@@ -212,4 +212,21 @@ export class ElasticsearchDatastore {
         return Promise.resolve(response.result);    //result should be 'updated'
     }
 
+    public async deleteAsset(assetId: string): Promise<string> {
+        let response;
+        debug('deleting asset: ', assetId);
+
+        try {
+            response = await this._elasticClient.delete({
+                index: ASSETS_INDEX,
+                id: assetId
+            });
+        } catch (error) {
+            debug(error);
+            return Promise.reject(error);
+        }
+        debug('response', response);
+        return Promise.resolve(response.result);    //result should be 'updated'
+    }
+
 }
