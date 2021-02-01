@@ -14,6 +14,7 @@ class MigrationRunner {
         throw new Error(`failed getting elasticConfig `);
       }
 
+      const badAssets: string[] = [];
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
@@ -26,8 +27,11 @@ class MigrationRunner {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
           if(layers) {
-            // await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
+            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
+          }
+          else {
+            badAssets.push(asset.assetId);
           }
         } catch(error) {
           debug(`ERROR: Failed storing layers. `, error);
@@ -35,14 +39,15 @@ class MigrationRunner {
 
       }
 
+      debug(`*** badAssets: ${badAssets.length} assets. ${badAssets} `);
 
 
-/*
-      const start = Date.now();
-      const hitsScrolled: object[] = await assetsDatastore.getScroll();
-      debug('hitsScrolled.length: ' + hitsScrolled.length);
-      debug('millis elapsed: ', Date.now() - start);
-*/
+      /*
+            const start = Date.now();
+            const hitsScrolled: object[] = await assetsDatastore.getScroll();
+            debug('hitsScrolled.length: ' + hitsScrolled.length);
+            debug('millis elapsed: ', Date.now() - start);
+      */
 
 
       //return this.response(200, layers);

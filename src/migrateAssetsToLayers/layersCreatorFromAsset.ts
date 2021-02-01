@@ -54,8 +54,8 @@ export class LayersCreatorFromAsset {
         }
 
         if(!layersOfAsset) {
-            debug('bad asset with no layer/s:', asset);
-            return
+            // debug('bad asset with no layer/s:', asset);
+            return null;
         }
 
         // Normalize regions
