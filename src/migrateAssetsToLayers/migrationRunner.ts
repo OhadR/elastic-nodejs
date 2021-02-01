@@ -2,7 +2,7 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { Layer, BunchAsset, LayersEsRepository } from "gvdl-repos-wrapper";
-var debug = require('debug')('runner');
+var debug = require('debug')('migration-runner');
 
 class MigrationRunner {
 
@@ -25,8 +25,10 @@ class MigrationRunner {
         try {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
-          await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
-          debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
+          if(layers) {
+            // await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
+            debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
+          }
         } catch(error) {
           debug(`ERROR: Failed storing layers. `, error);
         }
