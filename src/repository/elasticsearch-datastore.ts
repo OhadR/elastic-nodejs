@@ -78,7 +78,8 @@ export class ElasticsearchDatastore {
 
         this._elasticClient = new ElasticClient({
             host: url,
-            log: 'trace',
+//            log: 'trace',
+            log: 'info',
             apiVersion: '7.1' // use the same version of your Elasticsearch instance
         });
 
