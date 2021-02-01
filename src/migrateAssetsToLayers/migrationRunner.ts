@@ -19,14 +19,11 @@ class MigrationRunner {
       //debug(hits);
       debug('hits.length: ' + hits.length);
 
+      const start = Date.now();
       const hitsScrolled: object[] = await layersEsDatastore.getScroll();
       debug('hitsScrolled.length: ' + hitsScrolled.length);
+      debug('millis elapsed: ', Date.now() - start);
 
-      const ret: string = await layersEsDatastore.updateAsset('VMHS93QBTx0AMh3JVFjN', {
-        id: 'VMHS93QBTx0AMh3JVFjN',
-        ohad: 'redlich2',
-      });
-      debug(ret); //result should be 'updated'
 
       //return this.response(200, layers);
     }

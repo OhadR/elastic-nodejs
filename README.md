@@ -8,8 +8,13 @@ run elastic docker (version 7.1.0):
 
 # how to run the app
 
-    set ELASTIC_SEARCH_URL=https://search-test-staging-es-vkhujfib64q3uset4mdxrno264.us-east-1.es.amazonaws.com
+    set ELASTIC_SEARCH_URL=https://search-my-first-cluster-34xey2vduvfmz6h3assm4gfkda.eu-central-1.es.amazonaws.com
     set DEBUG=runner
+      
+other ES instance:
+
+* R&D: `https://search-my-first-cluster-34xey2vduvfmz6h3assm4gfkda.eu-central-1.es.amazonaws.com`
+* Staging: `https://search-test-staging-es-vkhujfib64q3uset4mdxrno264.us-east-1.es.amazonaws.com`
       
 # QUERIES
 
