@@ -1,6 +1,7 @@
 import {ElasticConfig} from "../types/config-type";
 import {Client as ElasticClient} from "elasticsearch";
 import * as _ from "lodash";
+import { BunchAsset } from "gvdl-repos-wrapper";
 var debug = require('debug')('elastic');
 
 const ASSETS_INDEX: string = 'assets';
@@ -85,15 +86,15 @@ export class ElasticsearchDatastore {
 
     }
 
-    public async getAssets(): Promise<object[]> {
+    public async getAssets(): Promise<BunchAsset[]> {
         debug(`getAssets: Retrieving assets`);
-        let hits: object[];
+        let hits;
 
 
         try {
             const response = await this._elasticClient.search({
                 index: ASSETS_INDEX,
-                size: 5000,
+                size: 9000,
 //                body: boolGeoQuery
                 body: matchAllQuery
             });
@@ -104,7 +105,10 @@ export class ElasticsearchDatastore {
         }
 
         debug(`Successfully retrieved ${_.size(hits)} hits`);
-        return Promise.resolve(hits);
+
+        const assets = hits.map(hit => hit._source);
+
+        return Promise.resolve(assets);
     }
 
 
@@ -170,7 +174,7 @@ export class ElasticsearchDatastore {
 
             // collect the titles from this response
             response.hits.hits.forEach(function (hit) {
-                debug(hit._id);
+                //debug(hit._id);
                 allQuotes.push(hit._source)
             });
 
