@@ -1,7 +1,5 @@
 import { BunchAsset, ImageLayer, Layer } from 'gvdl-repos-wrapper';
-//import normalize from 'turf-normalize';
 import * as normalize from 'turf-normalize';
-import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 var debug = require('debug')('elastic');
 
 
@@ -18,7 +16,7 @@ export class LayersCreatorFromAsset {
         return LayersCreatorFromAsset._instance;
     }
 
-    public async processAsset(asset: BunchAsset, assetsDatastore: ElasticsearchDatastore): Promise<Layer[]> {
+    public async processAsset(asset: BunchAsset): Promise<Layer[]> {
         let layersOfAsset: Layer[];
         try {
             //debug only: WARNING that will blast the logger:
@@ -56,9 +54,8 @@ export class LayersCreatorFromAsset {
         }
 
         if(!layersOfAsset) {
-            debug('FUCKKKK', asset);
-            await assetsDatastore.deleteAsset(asset.assetId);
-            return;
+            debug('bad asset with no layer/s:', asset);
+            return
         }
 
         // Normalize regions
