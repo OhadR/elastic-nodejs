@@ -18,7 +18,7 @@ class GetLayersByBoundingBox {
       const layersEsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
-      const hits: object[] = await layersEsDatastore.getLayersByOwner(ownerId);
+      const hits: object[] = await layersEsDatastore.getAssets();
       //debug(hits);
       debug('hits.length: ' + hits.length);
 

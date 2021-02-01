@@ -187,3 +187,10 @@ Source: https://www.compose.com/articles/geofile-elasticsearch-geo-queries-2/
 "We can add more to this query by defining another field called `relation`, which allows us to add spatial relation operators: `intersects`, `disjoint`, `within`, or `contains`. 
 A handy guide to these is located [here](https://www.elastic.co/guide/en/elasticsearch/reference/2.4/geo-shape.html#spatial-strategy). 
 The default value is intersects which in our case will give us all the cities within and on the border of our county. If we use a relation like disjoint, all the cities outside of King County will be counted."
+
+
+# Migration 
+
+## Migrate all assets to layers
+
+for the migration sake, I reuse repo and types from `gvdl-repos-wrapper`. to get it, I had to add the `.npmrc` file.

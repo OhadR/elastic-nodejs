@@ -84,12 +84,8 @@ export class ElasticsearchDatastore {
 
     }
 
-    public async getLayersByOwner(ownerId: string): Promise<object[]> {
-        if (!ownerId) {
-            return Promise.reject();
-        }
-
-        debug(`UtilitiesElasticsearchDatastore.getLayersByOwner: Retrieving layers for ownerId '${ownerId}'`);
+    public async getAssets(): Promise<object[]> {
+        debug(`getAssets: Retrieving assets`);
         let hits: object[];
 
 
@@ -106,7 +102,7 @@ export class ElasticsearchDatastore {
             return Promise.reject();
         }
 
-        debug(`Successfully retrieved ${_.size(hits)} hits for workorder id '${ownerId}'`);
+        debug(`Successfully retrieved ${_.size(hits)} hits`);
         return Promise.resolve(hits);
     }
 
