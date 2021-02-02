@@ -14,7 +14,9 @@ class MigrationRunner {
         throw new Error(`failed getting elasticConfig `);
       }
 
-      const badAssets: string[] = [];
+      const assetsWithNoLayers: string[] = [];
+      const assetsWithLayersFailedToIndex: string[] = [];
+
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
@@ -31,15 +33,18 @@ class MigrationRunner {
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
           }
           else {
-            badAssets.push(asset.assetId);
+            assetsWithNoLayers.push(asset.assetId);
           }
         } catch(error) {
           debug(`ERROR: Failed storing layers. `, error);
+          debug(asset.assetId);
+          assetsWithLayersFailedToIndex.push(asset.assetId);
         }
 
       }
 
-      debug(`*** badAssets: ${badAssets.length} assets. ${badAssets} `);
+      debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets.`);
+      debug(`*** assets With Layers Failed To Index: ${assetsWithLayersFailedToIndex.length} assets. ${assetsWithLayersFailedToIndex}`);
 
 
       /*

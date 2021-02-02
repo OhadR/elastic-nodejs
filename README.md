@@ -201,3 +201,9 @@ The default value is intersects which in our case will give us all the cities wi
     >ts-node src\migrateAssetsToLayers\migrationRunner.ts
 
 for the migration sake, I reuse repo and types from `gvdl-repos-wrapper`. to get it, I had to add the `.npmrc` file.
+
+there are assets that no layers are created out of them, from several reasons (bad assets, garbage, 'utilities-pole', etc.).
+I could them and print the number at the end of the run. (in R&D: 2800++).
+
+Similarly, there are LAYERS that fail to index - mostly because of the region. I count them, and print at the end, so it can be analyzed.
+(in R&D: 100~).
