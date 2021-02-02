@@ -111,6 +111,25 @@ export class ElasticsearchDatastore {
         return Promise.resolve(assets);
     }
 
+    public async getAsset(assetId: string): Promise<BunchAsset> {
+        debug(`getAsset: Retrieving asset`);
+        let asset;
+
+        try {
+            const response = await this._elasticClient.get({
+                index: ASSETS_INDEX,
+                id: assetId,
+                ignore: 404
+            });
+            asset = response?._source;
+        } catch (error) {
+            debug(error);
+            return Promise.reject();
+        }
+
+        return Promise.resolve(asset);
+    }
+
 
     public async getAnnotationComponents(workorderId: string): Promise<object[]> {
         if (!workorderId) {

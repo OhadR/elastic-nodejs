@@ -57,9 +57,42 @@ class MigrationRunner {
       //return this.error(500, {success: false, error: e.stack });
     }
   }
+
+  async analyzeSpecificAsset(assetId: string)  {
+    try {
+      const elasticConfig = Config.instance.elasticSearch;
+      if (elasticConfig == null) {
+        debug(`failed getting elasticConfig `);
+        throw new Error(`failed getting elasticConfig `);
+      }
+
+      const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
+      debug(`runner: got elastic' configuration`);
+
+      const asset: BunchAsset = await assetsDatastore.getAsset(assetId);
+      //debug(hits);
+
+      try {
+        //break asset into layers and store them:
+        const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
+        if(layers) {
+          debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
+        }
+        else {
+          debug('asset with no layers');
+        }
+      } catch(error) {
+        debug(`ERROR: Failed storing layers. `, error);
+      }
+    }
+    catch(e) {
+      debug('failed execution:', e.stack)
+    }
+  }
 }
 
 
 debug('starting runner...');
 const runner = new MigrationRunner();
 runner.migrate();
+//runner.analyzeSpecificAsset('1kzthk22n4951b4bqgv2qef02z.ast');

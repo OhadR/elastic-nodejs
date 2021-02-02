@@ -198,4 +198,6 @@ The default value is intersects which in our case will give us all the cities wi
 
 ## Migrate all assets to layers
 
+    >ts-node src\migrateAssetsToLayers\migrationRunner.ts
+
 for the migration sake, I reuse repo and types from `gvdl-repos-wrapper`. to get it, I had to add the `.npmrc` file.

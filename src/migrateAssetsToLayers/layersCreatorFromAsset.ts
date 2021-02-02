@@ -42,9 +42,7 @@ export class LayersCreatorFromAsset {
                 //if it is 'rawImages', get the layers for images:
                 if (asset.metadata.sourceFormat == 'rawImages') {
                     const rawImagesLayer = await this.getLayerOfRawImages(asset);
-                    if (rawImagesLayer != null) {
-                        layersOfAsset = layersOfAsset.concat(rawImagesLayer);
-                    }
+                    layersOfAsset = layersOfAsset.concat(rawImagesLayer);
                 }
             }
 
