@@ -131,40 +131,8 @@ export class ElasticsearchDatastore {
     }
 
 
-    public async getAnnotationComponents(workorderId: string): Promise<object[]> {
-        if (!workorderId) {
-            return Promise.reject();
-        }
-
-        debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Retrieving annotation's components for workorder id '${workorderId}'`);
-        const aggregationName = 'uniq_components';
-        let buckets: object[];
-        try {
-            const response = await this._elasticClient.search({
-                index: ASSETS_INDEX,
-                // q:'default_operator=AND&q=accountId:${context.args.accountId}+workorderId:${context.args.workorderId}',
-                q:`workorderId:${workorderId}`,
-                body: {
-                    size: 0,
-                    aggs : {
-                        [aggregationName] : {
-                            terms : { field : "componentName" }
-                        }
-                    }
-                }
-            });
-            buckets = response?.aggregations?.[aggregationName]?.buckets;
-        } catch (error) {
-            return Promise.reject();
-        }
-
-        const components = _.map(buckets, bucket => bucket.key);
-        debug(`UtilitiesElasticsearchDatastore.getAnnotationComponents: Successfully retrieved ${_.size(components)} annotation's components for workorder id '${workorderId}'`);
-        return Promise.resolve(components);
-    }
-
-    public async getScroll(): Promise<object[]> {
-        const allQuotes = [];
+    public async getScroll(): Promise<BunchAsset[]> {
+        const allQuotes: BunchAsset[] = [];
 
         // start things off by searching, setting a scroll timeout, and pushing
         // our first response into the queue to be processed
