@@ -94,7 +94,7 @@ export class ElasticsearchDatastore {
         try {
             const response = await this._elasticClient.search({
                 index: ASSETS_INDEX,
-                size: 9000,
+                size: 5000,
 //                body: boolGeoQuery
                 body: matchAllQuery
             });
@@ -169,11 +169,10 @@ export class ElasticsearchDatastore {
         // start things off by searching, setting a scroll timeout, and pushing
         // our first response into the queue to be processed
         let response = await this._elasticClient.search({
-            index: 'assets',
+            index: ASSETS_INDEX,
             // keep the search results "scrollable" for 30 seconds
             scroll: '30s',
-            // for the sake of this example, we will get only one result per search
-            size: 50,
+            size: 1000,
             // filter the source to only include the quote field
 //            _source: ['quote'],
             body: {

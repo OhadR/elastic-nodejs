@@ -14,6 +14,7 @@ run elastic docker (version 7.1.0):
 other ES instance:
 
 * R&D: `https://search-my-first-cluster-34xey2vduvfmz6h3assm4gfkda.eu-central-1.es.amazonaws.com`
+* dev-1: `https://esdev1.ixstack.net`
 * Staging: `https://search-test-staging-es-vkhujfib64q3uset4mdxrno264.us-east-1.es.amazonaws.com`
 * Production: `https://es.intelgeospatial.com`
       

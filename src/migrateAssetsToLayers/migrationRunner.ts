@@ -20,8 +20,12 @@ class MigrationRunner {
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
-      const assets: BunchAsset[] = await assetsDatastore.getAssets();
-      //debug(hits);
+
+      const start = Date.now();
+      const assets: BunchAsset[] = await assetsDatastore.getScroll();
+      debug('millis elapsed: ', Date.now() - start);
+
+
       debug('assets.length: ' + assets.length);
 
       let counter = 0;
@@ -56,15 +60,6 @@ class MigrationRunner {
       debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets.`);
       debug(`*** assets With Layers Failed To Index: ${assetsWithLayersFailedToIndex.length} assets. ${assetsWithLayersFailedToIndex}`);
       debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);
-
-
-      /*
-            const start = Date.now();
-            const hitsScrolled: object[] = await assetsDatastore.getScroll();
-            debug('hitsScrolled.length: ' + hitsScrolled.length);
-            debug('millis elapsed: ', Date.now() - start);
-      */
-
 
       //return this.response(200, layers);
     }
