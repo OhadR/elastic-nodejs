@@ -24,7 +24,11 @@ class MigrationRunner {
       //debug(hits);
       debug('assets.length: ' + assets.length);
 
+      let counter = 0;
       for(const asset of assets) {
+        if(++counter % 100 == 0)
+          debug(`**** ${counter} out of ${assets.length}`);
+
         try {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
