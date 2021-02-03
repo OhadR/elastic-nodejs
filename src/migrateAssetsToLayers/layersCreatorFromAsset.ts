@@ -84,6 +84,9 @@ export class LayersCreatorFromAsset {
                 layer.id = asset.assetId + '-' + layer.type;
                 layer.name = asset.name;
 
+                //check for override properties:
+                this.overrideData(asset, layer);
+
                 layers.push(layer);
             } else {
                 for (let url of productionList[idx]) {
@@ -95,6 +98,9 @@ export class LayersCreatorFromAsset {
 
                     layer.id = asset.assetId + '-' + layer.type;
                     layer.name = asset.name;
+
+                    //check for override properties:
+                    this.overrideData(asset, layer);
 
                     layers.push(layer);
                 }
@@ -108,7 +114,20 @@ export class LayersCreatorFromAsset {
 
     private async getLayerOfRawImages(asset: BunchAsset): Promise<Layer> {
 
-        return LayersCreatorFromAsset.createImageLayer(asset);
+        const layer: ImageLayer = LayersCreatorFromAsset.createImageLayer(asset);
+
+        //check for override properties:
+        this.overrideData(asset, layer);
+
+        return layer;
+    }
+
+    private overrideData(asset: BunchAsset, layer: Layer) {
+        const overrideData = asset.override_data?.[layer.type];
+        if(overrideData) {
+            debug(`overriding: ${JSON.stringify(overrideData)}, assetId: ${asset.assetId}, layerType: ${layer.type}`);
+            layer.metadata = { ...layer.metadata, ...overrideData };
+        }
     }
 
 
