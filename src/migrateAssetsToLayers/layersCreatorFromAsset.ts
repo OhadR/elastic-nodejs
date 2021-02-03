@@ -6,6 +6,7 @@ var debug = require('debug')('elastic');
 export class LayersCreatorFromAsset {
 
     private static _instance: LayersCreatorFromAsset;
+    private _layersMarkedDeleted = 0;
 
     private constructor() {}
 
@@ -42,7 +43,9 @@ export class LayersCreatorFromAsset {
                 //if it is 'rawImages', get the layers for images:
                 if (asset.metadata.sourceFormat == 'rawImages') {
                     const rawImagesLayer = await this.getLayerOfRawImages(asset);
-                    layersOfAsset = layersOfAsset.concat(rawImagesLayer);
+                    if(rawImagesLayer != null) {
+                        layersOfAsset = layersOfAsset.concat(rawImagesLayer);
+                    }
                 }
             }
 
@@ -81,6 +84,11 @@ export class LayersCreatorFromAsset {
 
                 layer.type = productionList[idx].toUpperCase();
 
+                if(asset.override_data?.[layer.type]?.deleted) {
+                    ++this._layersMarkedDeleted;
+                    continue;
+                }
+
                 layer.id = asset.assetId + '-' + layer.type;
                 layer.name = asset.name;
 
@@ -95,6 +103,11 @@ export class LayersCreatorFromAsset {
                         subdir = "mergeDataTile/";
                     }
                     layer.type = idx.toUpperCase();
+
+                    if(asset.override_data?.[layer.type]?.deleted) {
+                        ++this._layersMarkedDeleted;
+                        continue;
+                    }
 
                     layer.id = asset.assetId + '-' + layer.type;
                     layer.name = asset.name;
@@ -113,6 +126,11 @@ export class LayersCreatorFromAsset {
     }
 
     private async getLayerOfRawImages(asset: BunchAsset): Promise<Layer> {
+
+        if((asset.override_data?.['rawImages']?.deleted)) {
+            ++this._layersMarkedDeleted;
+            return null;
+        }
 
         const layer: ImageLayer = LayersCreatorFromAsset.createImageLayer(asset);
 
@@ -175,5 +193,9 @@ export class LayersCreatorFromAsset {
         imageLayer.metadata.dataTypes ? delete imageLayer.metadata.dataTypes : delete imageLayer.metadata.dataTypesSources;
 
         return imageLayer;
+    }
+
+    get layersMarkedDeleted(): number {
+        return this._layersMarkedDeleted;
     }
 }

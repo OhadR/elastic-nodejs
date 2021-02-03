@@ -55,6 +55,7 @@ class MigrationRunner {
 
       debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets.`);
       debug(`*** assets With Layers Failed To Index: ${assetsWithLayersFailedToIndex.length} assets. ${assetsWithLayersFailedToIndex}`);
+      debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);
 
 
       /*
@@ -92,6 +93,8 @@ class MigrationRunner {
         const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
         if(layers) {
           debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
+          for(const layer of layers)
+            debug(layer);
         }
         else {
           debug('asset with no layers');
@@ -109,5 +112,6 @@ class MigrationRunner {
 
 debug('starting runner...');
 const runner = new MigrationRunner();
-runner.migrate();
+//runner.migrate();
 //runner.analyzeSpecificAsset('1kzthk22n4951b4bqgv2qef02z.ast');
+runner.analyzeSpecificAsset('2xy665q8vz80ntcaw577wvpk3g.ast');
