@@ -37,8 +37,14 @@ class MigrationRunner {
           }
         } catch(error) {
           debug(`ERROR: Failed storing layers. `, error);
-          debug(asset.assetId);
-          assetsWithLayersFailedToIndex.push(asset.assetId);
+          if(error.message.includes('metadata.captureOn')) {
+            debug('$$$  deleting asset with bad captureOn');
+            assetsDatastore.deleteAsset(asset.assetId);
+          }
+          else {
+            debug(asset.assetId);
+            assetsWithLayersFailedToIndex.push(asset.assetId);
+          }
         }
 
       }
