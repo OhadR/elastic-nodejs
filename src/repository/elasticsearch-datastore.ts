@@ -198,6 +198,23 @@ export class ElasticsearchDatastore {
         return Promise.resolve(response.result);    //result should be 'updated'
     }
 
+    public async index(index: string, body: BunchAsset): Promise<string> {
+        let response;
+
+        try {
+            response = await this._elasticClient.index({
+                index,
+                id: body.assetId,
+                body: body
+            });
+        } catch (error) {
+            debug(error);
+            return Promise.reject(error);
+        }
+        debug(`index response: ${JSON.stringify(response)}`);
+        return Promise.resolve(response.result);    //result should be 'updated'
+    }
+
     public async deleteAsset(assetId: string): Promise<string> {
         let response;
         debug('deleting asset: ', assetId);
