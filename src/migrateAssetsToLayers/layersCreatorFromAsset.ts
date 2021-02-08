@@ -7,6 +7,7 @@ export class LayersCreatorFromAsset {
 
     private static _instance: LayersCreatorFromAsset;
     private _layersMarkedDeleted = 0;
+    private _poleAssets = 0;
 
     private constructor() {}
 
@@ -27,9 +28,12 @@ export class LayersCreatorFromAsset {
                 //patch:
                 delete asset.metadata.uploadingJobs;
 
-                //asset.metadata = JSON.parse(asset.metadata);
-                if (Object.keys(asset.metadata).length === 0 || asset.type == 'utility-pole') {
-                    return;
+                if( asset.type == 'utility-pole') {
+                    ++this._poleAssets;
+                    return null;
+                }
+                if (Object.keys(asset.metadata).length === 0) {
+                    return null;
                 }
 
                 if (asset.metadata.dataTypes && Object.keys(asset.metadata.dataTypes).length > 0) {
@@ -197,5 +201,9 @@ export class LayersCreatorFromAsset {
 
     get layersMarkedDeleted(): number {
         return this._layersMarkedDeleted;
+    }
+
+    get poleAssets(): number {
+        return this._poleAssets;
     }
 }

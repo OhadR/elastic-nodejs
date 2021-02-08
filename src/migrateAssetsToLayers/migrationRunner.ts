@@ -16,6 +16,7 @@ class MigrationRunner {
 
       const assetsWithNoLayers: string[] = [];
       const assetsWithLayersFailedToIndex: string[] = [];
+      let badCaptureOnAssets = 0;
 
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
@@ -47,7 +48,8 @@ class MigrationRunner {
           debug(`ERROR: Failed storing layers. `, error);
           if(error.message.includes('metadata.captureOn')) {
             debug('$$$  deleting asset with bad captureOn');
-            assetsDatastore.deleteAsset(asset.assetId);
+            await assetsDatastore.deleteAsset(asset.assetId);
+            ++badCaptureOnAssets;
           }
           else {
             debug(asset.assetId);
@@ -59,12 +61,14 @@ class MigrationRunner {
 
       debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets.`);
       debug(`*** assets With Layers Failed To Index: ${assetsWithLayersFailedToIndex.length} assets. ${assetsWithLayersFailedToIndex}`);
+      debug(`*** badCaptureOnAssets: ${badCaptureOnAssets}.`);
       debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);
+      debug(`pole-assets: ${LayersCreatorFromAsset.instance.poleAssets}`);
 
       //return this.response(200, layers);
     }
     catch(e) {
-      debug('failed execution:', e.stack)
+      debug('failed execution:', e)
       //return this.error(500, {success: false, error: e.stack });
     }
   }
@@ -87,7 +91,8 @@ class MigrationRunner {
         //break asset into layers and store them:
         const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
         if(layers) {
-          debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
+          // await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
+          // debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
           for(const layer of layers)
             debug(layer);
         }
@@ -107,6 +112,5 @@ class MigrationRunner {
 
 debug('starting runner...');
 const runner = new MigrationRunner();
-//runner.migrate();
+runner.migrate();
 //runner.analyzeSpecificAsset('1kzthk22n4951b4bqgv2qef02z.ast');
-runner.analyzeSpecificAsset('2xy665q8vz80ntcaw577wvpk3g.ast');
