@@ -37,7 +37,7 @@ class NewAssetMigrationRunner {
           debug(`**** ${counter} out of ${assets.length}`);
 
         try {
-          await assetsDatastore.index('fff', asset);
+          await assetsDatastore.indexItem('assets-08022021_1000', asset);
           debug(`stored asset ${asset.assetId} `);
         } catch(error) {
           debug(`ERROR: Failed storing asset. `, error);
@@ -75,7 +75,7 @@ class NewAssetMigrationRunner {
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
-      const asset: BunchAsset = await assetsDatastore.getAsset(assetId);
+      const asset: BunchAsset = await assetsDatastore.getItem(assetId);
       //debug(hits);
 
       try {

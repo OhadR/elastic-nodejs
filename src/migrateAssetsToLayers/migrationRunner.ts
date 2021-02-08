@@ -38,7 +38,7 @@ class MigrationRunner {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
           if(layers) {
-            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
+            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
           }
           else {
@@ -48,7 +48,7 @@ class MigrationRunner {
           debug(`ERROR: Failed storing layers. `, error);
           if(error.message.includes('metadata.captureOn')) {
             debug('$$$  deleting asset with bad captureOn');
-            await assetsDatastore.deleteAsset(asset.assetId);
+            await assetsDatastore.deleteItem(asset.assetId);
             ++badCaptureOnAssets;
           }
           else {
@@ -84,7 +84,7 @@ class MigrationRunner {
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
 
-      const asset: BunchAsset = await assetsDatastore.getAsset(assetId);
+      const asset: BunchAsset = await assetsDatastore.getItem(assetId);
       //debug(hits);
 
       try {

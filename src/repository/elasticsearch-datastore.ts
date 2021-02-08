@@ -1,7 +1,7 @@
 import {ElasticConfig} from "../types/config-type";
 import {Client as ElasticClient} from "elasticsearch";
 import * as _ from "lodash";
-import { BunchAsset } from "gvdl-repos-wrapper";
+import { EsBaseRepository, BunchAsset } from "gvdl-repos-wrapper";
 var debug = require('debug')('elastic');
 
 const ASSETS_INDEX: string = 'assets';
@@ -70,11 +70,13 @@ const boolGeoQuery = {
 };
 
 
-export class ElasticsearchDatastore {
+export class ElasticsearchDatastore extends EsBaseRepository<BunchAsset> {
 
     protected _elasticClient: ElasticClient;
 
     constructor(elasticConfig: ElasticConfig) {
+        super();
+
         const {url} = elasticConfig;
 
         this._elasticClient = new ElasticClient({
@@ -84,6 +86,10 @@ export class ElasticsearchDatastore {
             apiVersion: '7.1' // use the same version of your Elasticsearch instance
         });
 
+    }
+
+    protected getIndex(): string {
+        return ASSETS_INDEX;
     }
 
     public async getAssets(): Promise<BunchAsset[]> {
@@ -109,25 +115,6 @@ export class ElasticsearchDatastore {
         const assets = hits.map(hit => hit._source);
 
         return Promise.resolve(assets);
-    }
-
-    public async getAsset(assetId: string): Promise<BunchAsset> {
-        debug(`getAsset: Retrieving asset`);
-        let asset;
-
-        try {
-            const response = await this._elasticClient.get({
-                index: ASSETS_INDEX,
-                id: assetId,
-                ignore: 404
-            });
-            asset = response?._source;
-        } catch (error) {
-            debug(error);
-            return Promise.reject();
-        }
-
-        return Promise.resolve(asset);
     }
 
 
@@ -197,39 +184,4 @@ export class ElasticsearchDatastore {
         debug('response', response);
         return Promise.resolve(response.result);    //result should be 'updated'
     }
-
-    public async index(index: string, body: BunchAsset): Promise<string> {
-        let response;
-
-        try {
-            response = await this._elasticClient.index({
-                index,
-                id: body.assetId,
-                body: body
-            });
-        } catch (error) {
-            debug(error);
-            return Promise.reject(error);
-        }
-        debug(`index response: ${JSON.stringify(response)}`);
-        return Promise.resolve(response.result);    //result should be 'updated'
-    }
-
-    public async deleteAsset(assetId: string): Promise<string> {
-        let response;
-        debug('deleting asset: ', assetId);
-
-        try {
-            response = await this._elasticClient.delete({
-                index: ASSETS_INDEX,
-                id: assetId
-            });
-        } catch (error) {
-            debug(error);
-            return Promise.reject(error);
-        }
-        debug('response', response);
-        return Promise.resolve(response.result);    //result should be 'updated'
-    }
-
 }
