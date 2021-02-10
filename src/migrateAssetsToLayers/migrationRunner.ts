@@ -59,7 +59,7 @@ class MigrationRunner {
 
       }
 
-      debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets.`);
+      debug(`*** assetsWithNoLayers: ${assetsWithNoLayers.length} assets. ${assetsWithNoLayers}`);
       debug(`*** assets With Layers Failed To Index: ${assetsWithLayersFailedToIndex.length} assets. ${assetsWithLayersFailedToIndex}`);
       debug(`*** badCaptureOnAssets: ${badCaptureOnAssets}.`);
       debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);

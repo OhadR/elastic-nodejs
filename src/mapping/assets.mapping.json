@@ -5,26 +5,14 @@
             "assetId": {
                 "type": "keyword"
             },
-            "catalogLayerId": {
-                "type": "keyword"
-            },
             "createdBy": {
-                "type": "text"
+                "type": "keyword"
             },
             "createdOn": {
                 "type": "date"
             },
             "isMultiGeometriesTypes": {
                 "type": "boolean"
-            },
-            "itemIndex": {
-                "type": "long"
-            },
-            "layerReadyTime": {
-                "type": "long"
-            },
-            "location": {
-                "type": "float"
             },
             "metadata": {
                 "properties": {
@@ -43,24 +31,9 @@
                     "cameraType": {
                         "type": "object"
                     },
-                    "captureDate": {
-                        "type": "date"
-                    },
                     "captureOn": {
                         "type": "date",
                         "format": "MM/dd/yyyy"
-                    },
-                    "createdAt": {
-                        "type": "date"
-                    },
-                    "data-type": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
                     },
                     "dataFormat": {
                         "type": "text",
@@ -312,17 +285,8 @@
                             }
                         }
                     },
-                    "orientation": {
-                        "type": "object"
-                    },
                     "outputFormat": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword"
                     },
                     "outputResolution": {
                         "type": "text",
@@ -387,40 +351,16 @@
                         "type": "float"
                     },
                     "sessionId": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword"
                     },
                     "source": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword"
                     },
                     "sourceFormat": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword"
                     },
                     "supplierName": {
-                        "type": "text",
-                        "fields": {
-                            "keyword": {
-                                "type": "keyword",
-                                "ignore_above": 256
-                            }
-                        }
+                        "type": "keyword"
                     },
                     "updatedAt": {
                         "type": "date"
