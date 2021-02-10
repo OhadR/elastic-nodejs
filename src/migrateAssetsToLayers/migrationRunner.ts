@@ -16,7 +16,7 @@ class MigrationRunner {
 
       const assetsWithNoLayers: string[] = [];
       const assetsWithLayersFailedToIndex: string[] = [];
-      let badCaptureOnAssets = 0;
+      let badCaptureOnAssets: string[] = [];
 
       const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
       debug(`runner: got elastic' configuration`);
@@ -38,7 +38,7 @@ class MigrationRunner {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
           if(layers) {
-            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer)));
+            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer, null)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
           }
           else {
@@ -48,8 +48,8 @@ class MigrationRunner {
           debug(`ERROR: Failed storing layers. `, error);
           if(error.message.includes('metadata.captureOn')) {
             debug('$$$  deleting asset with bad captureOn');
-            await assetsDatastore.deleteItem(asset.assetId);
-            ++badCaptureOnAssets;
+            //await assetsDatastore.deleteItem(asset.assetId);
+            badCaptureOnAssets.push(asset.assetId);
           }
           else {
             debug(asset.assetId);
@@ -64,12 +64,9 @@ class MigrationRunner {
       debug(`*** badCaptureOnAssets: ${badCaptureOnAssets}.`);
       debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);
       debug(`pole-assets: ${LayersCreatorFromAsset.instance.poleAssets}`);
-
-      //return this.response(200, layers);
     }
     catch(e) {
       debug('failed execution:', e)
-      //return this.error(500, {success: false, error: e.stack });
     }
   }
 
@@ -91,7 +88,7 @@ class MigrationRunner {
         //break asset into layers and store them:
         const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
         if(layers) {
-          // await Promise.all(layers.map(layer => LayersEsRepository.instance.indexLayer(layer)));
+          await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer, null)));
           // debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
           for(const layer of layers)
             debug(layer);
