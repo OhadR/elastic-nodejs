@@ -1,0 +1,177 @@
+{
+    "mappings": {
+        "dynamic": "false",
+        "properties": {
+            "assetId": {
+                "type": "keyword"
+            },
+            "createdBy": {
+                "type": "keyword"
+            },
+            "createdDate": {
+                "type": "date"
+            },
+            "layerReadyTime": {
+                "type": "long"
+            },
+            "metadata": {
+                "properties": {
+                    "areaCoverage": {
+                        "type": "float"
+                    },
+                    "captureOn": {
+                        "type": "date",
+                        "format": "MM/dd/yyyy"
+                    },
+                    "dataFormat": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "dataSource": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "datasetName": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "description": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "inputResolution": {
+                        "type": "float"
+                    },
+                    "locationInformation": {
+                        "properties": {
+                            "city": {
+                                "type": "keyword"
+                            },
+                            "country": {
+                                "type": "keyword"
+                            },
+                            "countryCode": {
+                                "type": "keyword"
+                            },
+                            "formattedAddress": {
+                                "type": "text",
+                                "fields": {
+                                    "keyword": {
+                                        "type": "keyword",
+                                        "ignore_above": 256
+                                    }
+                                }
+                            },
+                            "neighbourhood": {
+                                "type": "keyword"
+                            },
+                            "state": {
+                                "type": "keyword"
+                            }
+                        }
+                    },
+                    "name": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "outputFormat": {
+                        "type": "keyword"
+                    },
+                    "outputResolution": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "pointPerSquareMeter": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "premium": {
+                        "type": "boolean"
+                    },
+                    "quality": {
+                        "type": "text",
+                        "fields": {
+                            "keyword": {
+                                "type": "keyword",
+                                "ignore_above": 256
+                            }
+                        }
+                    },
+                    "region": {
+                        "properties": {
+                            "features": {
+                                "properties": {
+                                    "geometry": {
+                                        "type": "geo_shape"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "resolution": {
+                        "type": "float"
+                    },
+                    "source": {
+                        "type": "keyword"
+                    },
+                    "sourceFormat": {
+                        "type": "keyword"
+                    },
+                    "supplierName": {
+                        "type": "keyword"
+                    },
+                    "updatedAt": {
+                        "type": "date"
+                    }
+                }
+            },
+            "modifiedBy": {
+                "type": "keyword"
+            },
+            "modifiedOn": {
+                "type": "date"
+            },
+            "name": {
+                "type": "text"
+            },
+            "ownerId": {
+                "type": "keyword"
+            }
+        }
+    }
+}
