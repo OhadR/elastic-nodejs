@@ -38,7 +38,7 @@ class MigrationRunner {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
           if(layers) {
-            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer, null)));
+            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
           }
           else {
@@ -88,7 +88,7 @@ class MigrationRunner {
         //break asset into layers and store them:
         const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
         if(layers) {
-          await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer, null)));
+          await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer)));
           // debug(`analyzed ${layers.length} layers for asset ${asset.assetId} `);
           for(const layer of layers)
             debug(layer);
