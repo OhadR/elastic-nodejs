@@ -6,24 +6,28 @@ var debug = require('debug')('migration-runner');
 
 class MigrationRunner {
 
+  private assetsDatastore: ElasticsearchDatastore;
+
+  constructor() {
+    const elasticConfig = Config.instance.elasticSearch;
+    if (elasticConfig == null) {
+      debug(`failed getting elasticConfig `);
+      throw new Error(`failed getting elasticConfig `);
+    }
+
+    this.assetsDatastore = new ElasticsearchDatastore(elasticConfig);
+    debug(`got elastic set`);
+  }
+
   async migrate()  {
     try {
-      const elasticConfig = Config.instance.elasticSearch;
-      if (elasticConfig == null) {
-        debug(`failed getting elasticConfig `);
-        throw new Error(`failed getting elasticConfig `);
-      }
-
       const assetsWithNoLayers: string[] = [];
       const assetsWithLayersFailedToIndex: string[] = [];
       let badCaptureOnAssets: string[] = [];
 
-      const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
-      debug(`runner: got elastic' configuration`);
-
 
       const start = Date.now();
-      const assets: BunchAsset[] = await assetsDatastore.getScroll();
+      const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
       debug('millis elapsed: ', Date.now() - start);
 
 
@@ -72,16 +76,8 @@ class MigrationRunner {
 
   async analyzeSpecificAsset(assetId: string)  {
     try {
-      const elasticConfig = Config.instance.elasticSearch;
-      if (elasticConfig == null) {
-        debug(`failed getting elasticConfig `);
-        throw new Error(`failed getting elasticConfig `);
-      }
 
-      const assetsDatastore = new ElasticsearchDatastore(elasticConfig);
-      debug(`runner: got elastic' configuration`);
-
-      const asset: BunchAsset = await assetsDatastore.getItem(assetId);
+      const asset: BunchAsset = await this.assetsDatastore.getItem(assetId);
       //debug(hits);
 
       try {
