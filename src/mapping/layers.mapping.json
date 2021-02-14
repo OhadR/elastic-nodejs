@@ -2,7 +2,7 @@
     "mappings": {
         "dynamic": "false",
         "properties": {
-            "assetId": {
+            "id": {
                 "type": "keyword"
             },
             "createdBy": {
@@ -13,6 +13,18 @@
             },
             "layerReadyTime": {
                 "type": "long"
+            },
+            "modifiedBy": {
+                "type": "keyword"
+            },
+            "modifiedOn": {
+                "type": "date"
+            },
+            "name": {
+                "type": "text"
+            },
+            "ownerId": {
+                "type": "keyword"
             },
             "metadata": {
                 "properties": {
@@ -159,18 +171,6 @@
                         "type": "date"
                     }
                 }
-            },
-            "modifiedBy": {
-                "type": "keyword"
-            },
-            "modifiedOn": {
-                "type": "date"
-            },
-            "name": {
-                "type": "text"
-            },
-            "ownerId": {
-                "type": "keyword"
             }
         }
     }
