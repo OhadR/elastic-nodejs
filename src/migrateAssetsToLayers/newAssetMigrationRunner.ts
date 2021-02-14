@@ -7,7 +7,7 @@ var debug = require('debug')('migration-runner');
 /**
  * this migrator migrates from a current asset index to a new one, with a different mapping
  */
-class NewAssetMigrationRunner {
+export class NewAssetMigrationRunner {
 
   private assetsDatastore: ElasticsearchDatastore;
 
@@ -97,19 +97,40 @@ class NewAssetMigrationRunner {
     return retVal;
   }
 
+  /**
+   *
+   * @param item: Layer or BunchAsset. is has 'metadata'.
+   */
+  static fixCaptureOn(item: any) {
+    debug('1, ' + item.metadata.captureOn);
+    if(!item.metadata.captureOn || item.metadata.captureOn === '') {
+      delete item.metadata.captureOn;
+      return;
+    }
+
+    const date = new Date(item.metadata.captureOn);
+    debug('2, ' + date);
+    item.metadata.captureOn = //date.toLocaleDateString();
+        date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}); // 08/19/2020 (month and day with two digits)
+    debug('3, ' + item.metadata.captureOn);
+  }
+
+
+
+  async fixAssetAndIndex(asset: BunchAsset) {
+    NewAssetMigrationRunner.fixCaptureOn(asset);
+    await this.assetsDatastore.indexItem(asset.assetId, asset);
+  }
+
   private assetsIds = [
-    '5a69dejnyj8bsanjdvq5w2rwjf.ast',
-    '382vqx17qr8108ppab61v227ng.ast',
-    '3n6ajthqwb8kyscyqb4rh3zmxw.ast',
-    '43spdgeqjw93j86dqb2je9t9xh.ast',
-    '2b2p24ww259xxbxh5j646cd9at.ast',
-    '3sd40ek0zg9qe80ev3naa2x0dv.ast',
-    'fmd9r4an686zbf4064njk9nhtf.ast',
-    '2gdhvgy1z393k9kz1nq98ygjxc.ast',
-    '65bfv4xkc08jys8s63kk3z9mmg.ast',
-    '3p791g3s3z8m5r86tr1sdmmj37.ast',
-    '3w6n7q4z0e9szsg9m3cmht5mqm.ast',
-    '58ax3acxtw8sqt15711439tpp5.ast'
+    '7zaepsp6jy91ya304zp43fezpa.ast',
+    '6g0aqb608p9vfsnt0rhmndvrve.ast',
+    '6m8xnajs0g86h9kqxtm2meqetw.ast',
+    '1fwxvfg6qe9d1s1vt7tj1ar8w0.ast',
+    '21xfzkb5dz9yx95qeb48p40jrv.ast',
+    '57c6a40z84992tf6pqx39qat57.ast',
+    '467hrsds88yc966vhqv6pq84j4.ast',
+    '2a7pq7xwsc9vasacghs0jky1nt.ast'
   ]
 }
 

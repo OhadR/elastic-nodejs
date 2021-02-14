@@ -2,6 +2,7 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { Layer, BunchAsset, LayersEsRepository } from "gvdl-repos-wrapper";
+import { NewAssetMigrationRunner } from "./newAssetMigrationRunner";
 var debug = require('debug')('migration-runner');
 
 class MigrationRunner {
@@ -78,15 +79,7 @@ class MigrationRunner {
   }
 
   async fixLayerAndIndex(layer: Layer) {
-    let metadata: any = layer.metadata;
-    debug('1, ' + metadata.captureOn);
-    const date = new Date(metadata.captureOn);
-    debug('2, ' + date);
-    debug('3, ' + date.toLocaleDateString());
-    metadata.captureOn = //date.toLocaleDateString();
-        date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}); // 08/19/2020 (month and day with two digits)
-
-    layer.metadata = metadata;
+    NewAssetMigrationRunner.fixCaptureOn(layer);
     await LayersEsRepository.instance.indexItem(layer.id, layer);
   }
 
