@@ -88,7 +88,6 @@ class MigrationRunner {
     try {
 
       const asset: BunchAsset = await this.assetsDatastore.getItem(assetId);
-      //debug(hits);
 
       try {
         //break asset into layers and store them:

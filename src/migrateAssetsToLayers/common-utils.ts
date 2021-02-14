@@ -35,6 +35,9 @@ export function fixPolygon(item: any) {
 }
 
 export function convertPolygonToPoint(item: any) {
+    if(!item.metadata.region)
+        return;
+
     debug('1, ' + JSON.stringify(item.metadata.region));
     item.metadata.region.features[0].geometry.type = "Point";
     item.metadata.region.features[0].geometry.coordinates = item.metadata.region.features[0].geometry.coordinates[0][0];
