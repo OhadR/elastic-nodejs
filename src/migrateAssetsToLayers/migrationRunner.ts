@@ -26,10 +26,13 @@ class MigrationRunner {
       let badCaptureOnAssets: string[] = [];
 
 
+/*
       const start = Date.now();
       const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
       debug('millis elapsed: ', Date.now() - start);
+*/
 
+      const assets: BunchAsset[] = await this.readProblematicAssets();
 
       debug('assets.length: ' + assets.length);
 
@@ -42,7 +45,7 @@ class MigrationRunner {
           //break asset into layers and store them:
           const layers: Layer[] = await LayersCreatorFromAsset.instance.processAsset(asset);
           if(layers) {
-            await Promise.all(layers.map(layer => LayersEsRepository.instance.indexItem(layer.id, layer)));
+            await Promise.all(layers.map(layer => this.fixLayerAndIndex(layer)));
             debug(`stored ${layers.length} layers for asset ${asset.assetId} `);
           }
           else {
@@ -74,6 +77,19 @@ class MigrationRunner {
     }
   }
 
+  async fixLayerAndIndex(layer: Layer) {
+    let metadata: any = layer.metadata;
+    debug('1, ' + metadata.captureOn);
+    const date = new Date(metadata.captureOn);
+    debug('2, ' + date);
+    debug('3, ' + date.toLocaleDateString());
+    metadata.captureOn = //date.toLocaleDateString();
+        date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}); // 08/19/2020 (month and day with two digits)
+
+    layer.metadata = metadata;
+    await LayersEsRepository.instance.indexItem(layer.id, layer);
+  }
+
   async analyzeSpecificAsset(assetId: string)  {
     try {
 
@@ -100,6 +116,29 @@ class MigrationRunner {
       debug('failed execution:', e.stack)
     }
   }
+
+  async readProblematicAssets(): Promise<BunchAsset[]> {
+    const retVal: BunchAsset[] = [];
+
+    for(let i = 0; i < this.assetsIds.length; ++i) {
+      const asset: BunchAsset = await this.assetsDatastore.getItem(this.assetsIds[i]);
+      retVal.push(asset);
+    }
+
+    debug(`num assets read: ${retVal.length}`);
+    return retVal;
+  }
+
+  private assetsIds = [
+    '7zaepsp6jy91ya304zp43fezpa.ast',
+    '6g0aqb608p9vfsnt0rhmndvrve.ast',
+    '6m8xnajs0g86h9kqxtm2meqetw.ast',
+    '1fwxvfg6qe9d1s1vt7tj1ar8w0.ast',
+    '21xfzkb5dz9yx95qeb48p40jrv.ast',
+    '57c6a40z84992tf6pqx39qat57.ast',
+    '467hrsds88yc966vhqv6pq84j4.ast',
+    '2a7pq7xwsc9vasacghs0jky1nt.ast'
+  ]
 }
 
 
