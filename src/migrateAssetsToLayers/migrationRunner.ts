@@ -2,7 +2,7 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { Layer, BunchAsset, LayersEsRepository } from "gvdl-repos-wrapper";
-import { NewAssetMigrationRunner } from "./newAssetMigrationRunner";
+import { fixPolygon } from "./common-utils";
 var debug = require('debug')('migration-runner');
 
 class MigrationRunner {
@@ -53,10 +53,10 @@ class MigrationRunner {
             assetsWithNoLayers.push(asset.assetId);
           }
         } catch(error) {
-          debug(`ERROR: Failed storing layers. `, error);
+          debug(`ERROR: Failed storing layers. `, error.message);
           if(error.message.includes('metadata.captureOn')) {
-            debug('$$$  deleting asset with bad captureOn');
-            //await assetsDatastore.deleteItem(asset.assetId);
+            debug('$$$  fixing asset with bad captureOn');
+            //TODO fix
             badCaptureOnAssets.push(asset.assetId);
           }
           else {
@@ -79,7 +79,8 @@ class MigrationRunner {
   }
 
   async fixLayerAndIndex(layer: Layer) {
-    NewAssetMigrationRunner.fixCaptureOn(layer);
+//    fixCaptureOn(layer);
+//    fixPolygon(layer);
     await LayersEsRepository.instance.indexItem(layer.id, layer);
   }
 
@@ -123,14 +124,22 @@ class MigrationRunner {
   }
 
   private assetsIds = [
-    '7zaepsp6jy91ya304zp43fezpa.ast',
-    '6g0aqb608p9vfsnt0rhmndvrve.ast',
-    '6m8xnajs0g86h9kqxtm2meqetw.ast',
-    '1fwxvfg6qe9d1s1vt7tj1ar8w0.ast',
-    '21xfzkb5dz9yx95qeb48p40jrv.ast',
-    '57c6a40z84992tf6pqx39qat57.ast',
-    '467hrsds88yc966vhqv6pq84j4.ast',
-    '2a7pq7xwsc9vasacghs0jky1nt.ast'
+    '569p7jngk89h5t0ayb5q1xh079.ast',
+    '7x7hqjzwk389bbq7cac16ngqx5.ast',
+    '5b57hrm47r82yan8mgbbr513en.ast',
+    '2pvkezfg0n86h80731xygs6zmt.ast',
+    '167red05c48rg9k6k69pe0yp30.ast',
+    '2h6c9vpwff9hztvgxwq21fv8wk.ast',
+    '2kymqxysq39k6tmepk866tvj4y.ast',
+    '1h87633c1f8kx98acg33k28j43.ast',
+    '3ehpmdv1ng95qrt5p7fktkezap.ast',
+    '879masm2j8sradmz9j02trcrt8.ast',
+    '7d8d79xrye993b2ececkz248xw.ast',
+    '2n0ssp3he0899b56955exf7f64.ast',
+    '5yev7mvfcr87wv3kdgkq45nhba.ast',
+    '5fjn5a319c9h7tvft0nc8qss7p.ast',
+    '4pckx7kfeb9djbtj6jp1fktzap.ast',
+    '481h3vxgq799pr0hdnb56eh8f0.ast'
   ]
 }
 

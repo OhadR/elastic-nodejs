@@ -2,12 +2,13 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { BunchAsset } from "gvdl-repos-wrapper";
-var debug = require('debug')('migration-runner');
+import { fixCaptureOn } from "./common-utils";
+var debug = require('debug')('asset-migration-runner');
 
 /**
  * this migrator migrates from a current asset index to a new one, with a different mapping
  */
-export class NewAssetMigrationRunner {
+class NewAssetMigrationRunner {
 
   private assetsDatastore: ElasticsearchDatastore;
 
@@ -97,28 +98,8 @@ export class NewAssetMigrationRunner {
     return retVal;
   }
 
-  /**
-   *
-   * @param item: Layer or BunchAsset. is has 'metadata'.
-   */
-  static fixCaptureOn(item: any) {
-    debug('1, ' + item.metadata.captureOn);
-    if(!item.metadata.captureOn || item.metadata.captureOn === '') {
-      delete item.metadata.captureOn;
-      return;
-    }
-
-    const date = new Date(item.metadata.captureOn);
-    debug('2, ' + date);
-    item.metadata.captureOn = //date.toLocaleDateString();
-        date.toLocaleDateString('en-US', {year: 'numeric', month: '2-digit', day: '2-digit'}); // 08/19/2020 (month and day with two digits)
-    debug('3, ' + item.metadata.captureOn);
-  }
-
-
-
   async fixAssetAndIndex(asset: BunchAsset) {
-    NewAssetMigrationRunner.fixCaptureOn(asset);
+    fixCaptureOn(asset);
     await this.assetsDatastore.indexItem(asset.assetId, asset);
   }
 
@@ -135,7 +116,7 @@ export class NewAssetMigrationRunner {
 }
 
 
-debug('starting runner...');
+debug('starting NewAssetMigrationRunner...');
 const runner = new NewAssetMigrationRunner();
 runner.migrate();
 //runner.analyzeSpecificAsset('5v9wmc16vt8kdbh3f3tdrwgne6.ast');
