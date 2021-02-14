@@ -2,7 +2,7 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { Layer, BunchAsset, LayersEsRepository } from "gvdl-repos-wrapper";
-import { fixPolygon } from "./common-utils";
+import { convertPolygonToPoint, fixPolygon } from "./common-utils";
 var debug = require('debug')('migration-runner');
 
 class MigrationRunner {
@@ -80,7 +80,7 @@ class MigrationRunner {
 
   async fixLayerAndIndex(layer: Layer) {
 //    fixCaptureOn(layer);
-//    fixPolygon(layer);
+    convertPolygonToPoint(layer);
     await LayersEsRepository.instance.indexItem(layer.id, layer);
   }
 

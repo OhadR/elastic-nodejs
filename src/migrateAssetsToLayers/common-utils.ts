@@ -33,3 +33,10 @@ export function fixPolygon(item: any) {
     item.metadata.region = normalize(item.metadata.region);
     debug('after normalize: ' + JSON.stringify(item.metadata.region));
 }
+
+export function convertPolygonToPoint(item: any) {
+    debug('1, ' + JSON.stringify(item.metadata.region));
+    item.metadata.region.features[0].geometry.type = "Point";
+    item.metadata.region.features[0].geometry.coordinates = item.metadata.region.features[0].geometry.coordinates[0][0];
+    debug('after: ' + JSON.stringify(item.metadata.region));
+}
