@@ -27,13 +27,12 @@ class MigrationRunner {
       let badCaptureOnAssets: string[] = [];
 
 
-/*
-      const start = Date.now();
       const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
-      debug('millis elapsed: ', Date.now() - start);
-*/
 
+
+/*
       const assets: BunchAsset[] = await this.readProblematicAssets();
+*/
 
       debug('assets.length: ' + assets.length);
 
@@ -80,7 +79,7 @@ class MigrationRunner {
 
   async fixLayerAndIndex(layer: Layer) {
 //    fixCaptureOn(layer);
-    convertPolygonToPoint(layer);
+//    convertPolygonToPoint(layer);
     await LayersEsRepository.instance.indexItem(layer.id, layer);
   }
 
@@ -146,4 +145,4 @@ class MigrationRunner {
 debug('starting runner...');
 const runner = new MigrationRunner();
 runner.migrate();
-//runner.analyzeSpecificAsset('1kzthk22n4951b4bqgv2qef02z.ast');
+//runner.analyzeSpecificAsset('qz1sadpsd9qj836r4wx693ddrq.ast');
