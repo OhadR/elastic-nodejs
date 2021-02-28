@@ -2,7 +2,7 @@ import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { BunchAsset } from "gvdl-repos-wrapper";
-import { fixCaptureOn } from "./common-utils";
+import { fixCaptureOn, fixPolygon } from "./common-utils";
 var debug = require('debug')('asset-migration-runner');
 
 /**
@@ -27,13 +27,15 @@ class NewAssetMigrationRunner {
     try {
 
       const assetsFailedToIndex: string[] = [];
-      let badCaptureOnAssets = 0;
+      let badCaptureOnAssets: string[] = [];
+
 
 /*
       const start = Date.now();
       const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
       debug('millis elapsed: ', Date.now() - start);
 */
+
 
       const assets: BunchAsset[] = await this.readProblematicAssets();
 
@@ -45,14 +47,14 @@ class NewAssetMigrationRunner {
           debug(`**** ${counter} out of ${assets.length}`);
 
         try {
-          await this.assetsDatastore.indexItem(asset.assetId, asset, 'assets-08022021_1000');
+          await this.assetsDatastore.indexItem(asset.assetId, asset, 'assets-28022021');
           debug(`stored asset ${asset.assetId} `);
         } catch (error) {
           debug(`ERROR: Failed storing asset. `, error);
           if (error.message.includes('metadata.captureOn')) {
             debug('$$$  deleting asset with bad captureOn');
             //await assetsDatastore.deleteAsset(asset.assetId);
-            ++badCaptureOnAssets;
+            badCaptureOnAssets.push(asset.assetId);
           } else {
             debug(asset.assetId);
             assetsFailedToIndex.push(asset.assetId);
@@ -62,7 +64,7 @@ class NewAssetMigrationRunner {
       }
 
       debug(`*** assets With Layers Failed To Index: ${assetsFailedToIndex.length} assets. ${assetsFailedToIndex}`);
-      debug(`*** badCaptureOnAssets: ${badCaptureOnAssets}.`);
+      debug(`*** badCaptureOnAssets: ${badCaptureOnAssets.length} assets. ${badCaptureOnAssets}.`);
       debug(`layersMarkedDeleted: ${LayersCreatorFromAsset.instance.layersMarkedDeleted}`);
       debug(`pole-assets: ${LayersCreatorFromAsset.instance.poleAssets}`);
     } catch (e) {
@@ -76,7 +78,8 @@ class NewAssetMigrationRunner {
       const asset: BunchAsset = await this.assetsDatastore.getItem(assetId);
 
       try {
-        await this.assetsDatastore.indexItem(asset.assetId, asset, 'assets-08022021_1000');
+        await this.fixAssetAndIndex(asset);
+//        await this.assetsDatastore.indexItem(asset.assetId, asset, 'assets-28022021');
         debug(`stored asset ${asset.assetId} `);
       } catch (error) {
         debug(`ERROR: Failed storing layers. `, error);
@@ -99,19 +102,18 @@ class NewAssetMigrationRunner {
   }
 
   async fixAssetAndIndex(asset: BunchAsset) {
-    fixCaptureOn(asset);
+    fixPolygon(asset);
     await this.assetsDatastore.indexItem(asset.assetId, asset);
   }
 
   private assetsIds = [
-    '7zaepsp6jy91ya304zp43fezpa.ast',
-    '6g0aqb608p9vfsnt0rhmndvrve.ast',
-    '6m8xnajs0g86h9kqxtm2meqetw.ast',
-    '1fwxvfg6qe9d1s1vt7tj1ar8w0.ast',
-    '21xfzkb5dz9yx95qeb48p40jrv.ast',
-    '57c6a40z84992tf6pqx39qat57.ast',
-    '467hrsds88yc966vhqv6pq84j4.ast',
-    '2a7pq7xwsc9vasacghs0jky1nt.ast'
+    '1wdw3pza7x9jdapgesvpa6g8ss.ast',
+    '1e4evwp0qt94sa5bm0gyp6z43k.ast',
+    '2vx6s8n9mq9py945p2k498mc19.ast',
+    '5djdvd20n88kxbhx4b36bhybwt.ast',
+    '5knx6awgk994mt55cc99pkka5j.ast',
+    '7k848q0q4x9wd8j7r51vfk2ba4.ast',
+    '7bkdtkx2v58hzvd8bna6sm32tr.ast'
   ]
 }
 
@@ -119,4 +121,4 @@ class NewAssetMigrationRunner {
 debug('starting NewAssetMigrationRunner...');
 const runner = new NewAssetMigrationRunner();
 runner.migrate();
-//runner.analyzeSpecificAsset('5v9wmc16vt8kdbh3f3tdrwgne6.ast');
+//runner.analyzeSpecificAsset('7bkdtkx2v58hzvd8bna6sm32tr.ast');

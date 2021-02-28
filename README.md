@@ -211,3 +211,11 @@ I skip them and print the number at the end of the run. (in R&D: 2800++).
 
 Similarly, there are LAYERS that fail to index - mostly because of the `captureOn` and `region`. I count them, and print at the end, so it can be analyzed.
 (in R&D: 100~).
+
+---
+`NewAssetMigrationRunner` - migrates all "old" assets from 'assets' alias to a new index (with new mapping). it also
+has code to handle "problematic" assets.
+
+`MigrationRunner` - traverse all assets (NOTE: from 'assets' alias. Make sure you work with the right index!) and generates
+layers. then index the layers in 'layers'. We have methods to handle bad "captureOn" field (transform it to MM/dd/YYYY format)
+and bad polygons - polygons with the same point 5 times.
