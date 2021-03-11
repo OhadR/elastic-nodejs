@@ -1,4 +1,3 @@
-import { Config } from "../config/config";
 import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
 import { LayersCreatorFromAsset } from "./layersCreatorFromAsset";
 import { BunchAsset } from "gvdl-repos-wrapper";
