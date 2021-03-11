@@ -22,7 +22,7 @@ class GetLayersByBoundingBox {
       //debug(hits);
       debug('hits.length: ' + hits.length);
 
-      const hitsScrolled: object[] = await layersEsDatastore.getScroll();
+      const hitsScrolled: object[] = await layersEsDatastore.getAllItems();
       debug('hitsScrolled.length: ' + hitsScrolled.length);
 
       const ret: string = await layersEsDatastore.updateAsset('VMHS93QBTx0AMh3JVFjN', {

@@ -27,7 +27,7 @@ class MigrationRunner {
       let badCaptureOnAssets: string[] = [];
 
 
-      const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
+      const assets: BunchAsset[] = await this.assetsDatastore.getAllItems();
 
 
 /*

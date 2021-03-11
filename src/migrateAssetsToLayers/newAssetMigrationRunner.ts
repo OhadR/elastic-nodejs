@@ -32,7 +32,7 @@ class NewAssetMigrationRunner {
 
 /*
       const start = Date.now();
-      const assets: BunchAsset[] = await this.assetsDatastore.getScroll();
+      const assets: BunchAsset[] = await this.assetsDatastore.getAllItems();
       debug('millis elapsed: ', Date.now() - start);
 */
 

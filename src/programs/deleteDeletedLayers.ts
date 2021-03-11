@@ -1,7 +1,4 @@
-import { Config } from "../config/config";
-import { ElasticsearchDatastore } from "../repository/elasticsearch-datastore";
-import { Layer, BunchAsset } from "gvdl-repos-wrapper";
-import { LayersEsRepositoryEx } from "../repository/elasticsearch-layers-datastore";
+import { Layer, LayersEsRepository } from "gvdl-repos-wrapper";
 var debug = require('debug')('migration-runner');
 
 /**
@@ -14,7 +11,7 @@ var debug = require('debug')('migration-runner');
  */
 class DeleteDeltedLayers {
 
-  private layersDatastore: LayersEsRepositoryEx = new LayersEsRepositoryEx();
+  private layersDatastore: LayersEsRepository = new LayersEsRepository();
 
   constructor() {}
 
@@ -23,7 +20,7 @@ class DeleteDeltedLayers {
     try {
       const deletedLayers: string[] = [];
 
-      const layers: Layer[] = await this.layersDatastore.getScroll();
+      const layers: Layer[] = await this.layersDatastore.getAllItems();
 
       debug('assets.length: ' + layers.length);
 
