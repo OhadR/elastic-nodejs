@@ -78,6 +78,7 @@ export class ElasticsearchDatastore extends EsBaseRepository<BunchAsset> {
         return ASSETS_INDEX;
     }
 
+    //deprecated - ue super.getAllItems():
     public async getAssets(): Promise<BunchAsset[]> {
         debug(`getAssets: Retrieving assets`);
         let hits;
