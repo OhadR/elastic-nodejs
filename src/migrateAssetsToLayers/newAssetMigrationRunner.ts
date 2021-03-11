@@ -13,13 +13,7 @@ class NewAssetMigrationRunner {
   private assetsDatastore: ElasticsearchDatastore;
 
   constructor() {
-    const elasticConfig = Config.instance.elasticSearch;
-    if (elasticConfig == null) {
-      debug(`failed getting elasticConfig `);
-      throw new Error(`failed getting elasticConfig `);
-    }
-
-    this.assetsDatastore = new ElasticsearchDatastore(elasticConfig);
+    this.assetsDatastore = new ElasticsearchDatastore();
     debug(`got elastic set`);
   }
 

@@ -1,5 +1,3 @@
-import {ElasticConfig} from "../types/config-type";
-import {Client as ElasticClient} from "elasticsearch";
 import * as _ from "lodash";
 import { EsBaseRepository, BunchAsset } from "gvdl-repos-wrapper";
 var debug = require('debug')('elastic');
@@ -72,20 +70,8 @@ const boolGeoQuery = {
 
 export class ElasticsearchDatastore extends EsBaseRepository<BunchAsset> {
 
-    protected _elasticClient: ElasticClient;
-
-    constructor(elasticConfig: ElasticConfig) {
+    constructor() {
         super();
-
-        const {url} = elasticConfig;
-
-        this._elasticClient = new ElasticClient({
-            host: url,
-//            log: 'trace',
-            log: 'info',
-            apiVersion: '7.1' // use the same version of your Elasticsearch instance
-        });
-
     }
 
     protected getIndex(): string {

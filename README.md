@@ -27,12 +27,13 @@ to list images - including the elastic image:
     docker images 
 
 
-setting env-variables:
+### setting env-variables:
 
-ELASTIC_SEARCH_URL=http://localhost:9200/
+    ELASTIC_SEARCH_URL=http://localhost:9200/
 
 // for debug():
-DEBUG=*,-not_this
+    
+    DEBUG=*,-not_this
 
 
 create index:

@@ -1,4 +1,3 @@
-import { Config } from "./config/config";
 import { ElasticsearchDatastore } from "./repository/elasticsearch-datastore";
 var debug = require('debug')('runner');
 
@@ -9,13 +8,7 @@ class GetLayersByBoundingBox {
     try {
       debug('got accountId:', ownerId);      //----------------------------------------------------------------------------------------------------------------------------------------
 
-      const elasticConfig = Config.instance.elasticSearch;
-      if (elasticConfig == null) {
-        debug(`failed getting elasticConfig `);
-        throw new Error(`failed getting elasticConfig `);
-      }
-
-      const layersEsDatastore = new ElasticsearchDatastore(elasticConfig);
+      const layersEsDatastore = new ElasticsearchDatastore();
       debug(`runner: got elastic' configuration`);
 
       const hits: object[] = await layersEsDatastore.getAssets();
@@ -43,13 +36,7 @@ class GetLayersByBoundingBox {
   async updateMetadata()  {
     const ownerId = 'MTohad';
     try {
-      const elasticConfig = Config.instance.elasticSearch;
-      if (elasticConfig == null) {
-        debug(`failed getting elasticConfig `);
-        throw new Error(`failed getting elasticConfig `);
-      }
-
-      const layersEsDatastore = new ElasticsearchDatastore(elasticConfig);
+      const layersEsDatastore = new ElasticsearchDatastore();
       debug(`runner: got elastic' configuration`);
 
       const ret: string = await layersEsDatastore.updateAsset('4bjst5s49e8qc8gfwmem3qvaby.ast', {
