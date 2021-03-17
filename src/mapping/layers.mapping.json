@@ -169,6 +169,12 @@
                     },
                     "updatedAt": {
                         "type": "date"
+                    },
+                    "deleted": {
+                        "type": "boolean"
+                    },
+                    "public": {
+                        "type": "boolean"
                     }
                 }
             }

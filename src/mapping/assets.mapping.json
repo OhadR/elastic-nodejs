@@ -367,6 +367,9 @@
                     },
                     "updatedAt": {
                         "type": "date"
+                    },
+                    "public": {
+                        "type": "boolean"
                     }
                 }
             },
