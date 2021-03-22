@@ -26,6 +26,9 @@
             "ownerId": {
                 "type": "keyword"
             },
+            "type": {
+                "type": "keyword"
+            },
             "metadata": {
                 "properties": {
                     "areaCoverage": {
