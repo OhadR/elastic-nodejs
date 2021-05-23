@@ -38,6 +38,10 @@
                         "type": "date",
                         "format": "MM/dd/yyyy"
                     },
+                    "captureOnTill": {
+                        "type": "date",
+                        "format": "MM/dd/yyyy"
+                    },
                     "dataFormat": {
                         "type": "text",
                         "fields": {
