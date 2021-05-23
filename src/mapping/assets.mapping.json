@@ -5,6 +5,9 @@
             "assetId": {
                 "type": "keyword"
             },
+            "catalogLayerId": {
+                "type": "keyword"
+            },
             "createdBy": {
                 "type": "keyword"
             },
